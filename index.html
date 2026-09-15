@@ -1,0 +1,486 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ваш маркетинговый план</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400&display=swap">
+</head><body><style>
+:root{
+  --bg:#FFFFFF; --ink:#111111; --red:#E10600; --cob:#2456E0; --panel:#F5F5F3; --hair:#E3E3E0; --grey:#77776F; --light:#B8B8B2; --ok:#1E7F4F; --warn:#B45309;
+  --disp:"Oswald","Arial Narrow",Impact,sans-serif; --body:"Inter",system-ui,Arial,sans-serif; --mono:"IBM Plex Mono",Menlo,Consolas,monospace; --q:"Playfair Display",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#131313; --ink:#F1F1EE; --panel:#1D1D1C; --hair:#2E2E2C; --grey:#A3A39B; --light:#5A5A55; --cob:#6F92F2; --ok:#4CC38A; --warn:#F0A650; } }
+:root[data-theme="dark"]{ --bg:#131313; --ink:#F1F1EE; --panel:#1D1D1C; --hair:#2E2E2C; --grey:#A3A39B; --light:#5A5A55; --cob:#6F92F2; --ok:#4CC38A; --warn:#F0A650; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:600px;margin:0 auto;padding:0 18px;padding-block:0 110px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;border-bottom:1px solid var(--hair)}
+header.top .wrap{padding-block:12px 10px;display:flex;flex-direction:column;gap:8px}
+.brandline{display:flex;justify-content:space-between;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.brandline b{color:var(--red);font-weight:500}
+.prog{display:flex;align-items:center;gap:10px}
+.prog .lbl{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;min-width:74px}
+.segs{display:flex;gap:5px;flex:1}
+.segs i{display:block;height:7px;flex:1;background:var(--hair);border-radius:1px}
+.segs i.done{background:var(--red)}
+.segs i.cur{background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--red)}
+.stripe{position:fixed;left:0;top:0;bottom:0;width:14px;pointer-events:none;background:repeating-linear-gradient(90deg,var(--red) 0 2px,transparent 2px 5px);opacity:.9}
+@media (max-width:640px){.stripe{display:none}}
+section.screen{display:none;padding-block:22px 0}
+section.screen.on{display:block}
+.eyebrow{font:500 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin:0 0 8px}
+.eyebrow.red{color:var(--red)} .eyebrow.cob{color:var(--cob)}
+h1,h2{font-family:var(--disp);font-weight:600;text-transform:uppercase;letter-spacing:.005em;line-height:1;margin:0;text-wrap:balance}
+h1{font-size:clamp(36px,10vw,64px)} h2{font-size:clamp(30px,8vw,40px)}
+h1 .r,h2 .r{color:var(--red)}
+h3{font-family:var(--disp);font-weight:500;text-transform:uppercase;font-size:18px;letter-spacing:.02em;margin:26px 0 8px}
+.q{font:italic 400 19px/1.35 var(--q);color:var(--cob);margin:10px 0 0}
+p{margin:10px 0;max-width:62ch} p.small{font-size:13.5px;color:var(--grey)}
+.author{display:grid;grid-template-columns:1fr;gap:6px;margin:16px 0 6px;padding:14px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--hair)}
+.author .name{font:600 14px/1.2 var(--body)} .author .meta{font:400 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--grey)}
+label.f{display:block;margin:14px 0 0}
+label.f span{display:block;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+textarea,input[type=text],input[type=number],input[type=date],select{width:100%;font:16px/1.4 var(--body);color:var(--ink);background:var(--bg);border:0;border-bottom:1.5px solid var(--ink);padding:8px 0;border-radius:0;outline:none}
+textarea{resize:vertical;min-height:64px}
+textarea:focus,input:focus,select:focus{border-bottom-color:var(--cob);box-shadow:0 1.5px 0 var(--cob)}
+input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font:500 13.5px/1.2 var(--body);padding:9px 12px;border:1.5px solid var(--hair);background:var(--panel);color:var(--ink);border-radius:2px;cursor:pointer;text-align:left}
+.chip:hover{border-color:var(--grey)} .chip:focus-visible{outline:2px solid var(--cob);outline-offset:2px}
+.chip.on{border-color:var(--ink);background:var(--bg);box-shadow:inset 0 0 0 1px var(--ink)}
+.chip.on::before{content:"✓ ";color:var(--red)}
+.chip.dis{opacity:.45;cursor:not-allowed}
+.tpl{display:grid;gap:8px;margin-top:8px}
+.tpl button{text-align:left;font:400 14px/1.4 var(--body);padding:10px 12px;border:1px solid var(--hair);background:var(--panel);color:var(--ink);border-radius:2px;cursor:pointer}
+.tpl button b{display:block;font-weight:600}
+.tpl button:hover{border-color:var(--grey)}
+.cols{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 16px;margin-top:6px}
+@media (max-width:420px){.cols{grid-template-columns:1fr}}
+.col h4{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:10px 0 4px}
+.col .chips{flex-direction:column;align-items:stretch;gap:6px}
+.col input{margin-top:6px;font-size:14px}
+.preview{margin-top:18px;padding:16px;border:1.5px solid var(--ink);font:600 18px/1.35 var(--body)}
+.preview .r{color:var(--red)} .preview .ph{color:var(--light);font-weight:400}
+.check{margin-top:14px;padding:14px;background:var(--panel)}
+.check .row{display:flex;gap:8px;margin-top:8px}
+.btn{font:600 14px/1 var(--body);padding:12px 16px;border:1.5px solid var(--ink);background:var(--bg);color:var(--ink);border-radius:2px;cursor:pointer}
+.btn.pri{background:var(--ink);color:var(--bg)} .btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn:focus-visible{outline:2px solid var(--cob);outline-offset:2px}
+.btn.sm{padding:9px 12px;font-size:13px}
+.note{margin-top:10px;padding:10px 12px;border-left:3px solid var(--red);font-size:14px}
+.note.ok{border-left-color:var(--ok)} .note.hide{display:none}
+.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px}
+@media (max-width:420px){.calc{grid-template-columns:1fr}}
+.calc label.f{margin-top:8px}
+.res{margin-top:18px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.res .tile{padding:12px 12px 10px;background:var(--panel);border-top:2px solid var(--ink)}
+.res .tile.red{border-top-color:var(--red)}
+.res .tile .v{font:500 30px/1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.res .tile .v.red{color:var(--red)}
+.res .tile .k{font:500 10px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:6px}
+.verdict{margin-top:14px;padding:14px 16px;font:600 16px/1.35 var(--body);border:1.5px solid var(--ink)}
+.verdict.no{border-color:var(--red)} .verdict.no b{color:var(--red)} .verdict.yes b{color:var(--ok)}
+.knobs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.deleg{display:none;margin-top:8px} .deleg.on{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.pk{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+.pk .row{display:grid;grid-template-columns:1.1fr .9fr 1.6fr;gap:10px;align-items:end}
+@media (max-width:460px){.pk .row{grid-template-columns:1fr 1fr}.pk .row .what{grid-column:1/-1}}
+.pk .nm{font-family:var(--disp);font-weight:500;text-transform:uppercase;font-size:16px;padding-bottom:8px;border-bottom:1.5px solid transparent}
+.pk .row.max .nm{color:var(--red)}
+.list{display:grid;gap:0;margin-top:6px}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair);cursor:pointer}
+.item .box{width:20px;height:20px;border:1.5px solid var(--ink);border-radius:2px;display:grid;place-items:center;font-size:13px;color:var(--red)}
+.item.on .box::after{content:"✓"}
+.item .t{font-size:15px} .item .m{font:400 12px/1 var(--mono);color:var(--grey);white-space:nowrap}
+.item.dis{opacity:.4;cursor:not-allowed}
+.item .t input{font-size:15px;padding:4px 0}
+.sub{display:none;margin:6px 0 4px 32px} .sub.on{display:block}
+.sub label.f{margin-top:4px}
+.seg{display:flex;border:1.5px solid var(--ink);margin-top:14px}
+.seg button{flex:1;font:600 13px/1.2 var(--body);padding:10px 8px;background:var(--bg);color:var(--ink);border:0;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.days{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.days button{flex:1;min-width:40px;font:500 14px/1 var(--disp);padding:12px 0;border:1.5px solid var(--hair);background:var(--panel);color:var(--ink);cursor:pointer;border-radius:2px}
+.days button.on{border-color:var(--red);background:var(--red);color:#fff}
+.plan{margin-top:14px;border-top:1.5px solid var(--ink)}
+.plan .d{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:14px 0;border-bottom:1px solid var(--hair)}
+.plan .d .n{font:500 12px/1.4 var(--mono);color:var(--red)}
+.plan .d .h{font:600 15px/1.3 var(--body)}
+.plan .d .b{font-size:14.5px;margin-top:4px;white-space:pre-line}
+.plan .d .b.empty{color:var(--light);font-style:italic}
+.plan .d a{font-size:12px;color:var(--cob);text-decoration:none;margin-left:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tg{margin-top:26px;padding:16px;border:1.5px solid var(--ink);display:grid;gap:6px}
+.tg a{color:var(--cob);font-weight:600;text-decoration:none;word-break:break-all}
+.foot{margin-top:26px;font:400 10px/1.4 var(--body);color:var(--grey)}
+nav.bot{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--hair);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));z-index:6}
+nav.bot .in{max-width:600px;margin:0 auto;display:flex;justify-content:space-between;gap:10px;align-items:center}
+nav.bot .step{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--grey)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;font:500 13px/1 var(--body);border-radius:2px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+.start{padding-block:34px 0}
+.start .sub1{font:italic 400 22px/1.2 var(--q);color:var(--cob);margin:12px 0 22px}
+.hr{height:1.5px;background:var(--ink);margin:18px 0}
+.ex{font:500 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cob);margin-left:8px}
+@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+</style>
+
+<div class="stripe" aria-hidden="true"></div>
+<header class="top"><div class="wrap">
+  <div class="brandline"><b>Елена Сорокина</b><span>Ваш маркетинговый план</span></div>
+  <div class="prog"><span class="lbl" id="progLbl">Шесть шагов</span><div class="segs" id="segs"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div></header>
+
+<main class="wrap">
+
+<!-- 0 · старт -->
+<section class="screen start" data-s="0">
+  <h1>Ваш<br>маркетинговый<br><span class="r">план</span></h1>
+  <div class="sub1">от Елены Сорокиной</div>
+  <p>Шесть шагов, как в тетради на столе. На каждом экране вы отвечаете на два-три вопроса, а в конце получаете план на одном экране: скопировать, отправить себе, показать.</p>
+  <p class="small">Всё остаётся в вашем телефоне. Вернётесь позже, ответы будут на месте.</p>
+  <label class="f"><span>Как вас зовут</span><input type="text" id="name" placeholder="Марина" autocomplete="given-name"></label>
+  <label class="f"><span>Чем занимаетесь</span><input type="text" id="biz" placeholder="торты на заказ, маникюр, уборка, репетитор…"></label>
+</section>
+
+<!-- 1 · кому я продаю -->
+<section class="screen" data-s="1">
+  <p class="eyebrow">Шаг 1 · тетрадь, лист 4</p>
+  <h2>Кому я <span class="r">продаю</span></h2>
+  <div class="author"><div class="q">«Людям не нужна дрель. Людям нужна дырка в стене».</div><div class="name">Теодор Левитт</div><div class="meta">Гарвард · 1960-е</div></div>
+  <p>Не всем. Одному конкретному человеку с понятными потребностями, страхами и желаниями. Описывает его не возраст, а то, как он живёт и что ему важно.</p>
+  <h3>Мой клиент</h3>
+  <label class="f"><span>Кто он и как живёт</span><textarea id="c1" placeholder="Ира, 29 лет. Менеджер по персоналу на заводе. Маникюр раз в три недели."></textarea></label>
+  <label class="f"><span>Что ему важно</span><textarea id="c2" placeholder="стойкость, чистота инструментов, после 17:00, запись онлайн"></textarea></label>
+  <label class="f"><span>Чего боится · чем я это снимаю</span><textarea id="c3" placeholder="боится грязных инструментов · показываю стерилизатор до начала"></textarea></label>
+  <h3>Не знаете, что писать? Нажмите похожее и допишите</h3>
+  <div class="tpl" id="tpl1"></div>
+</section>
+
+<!-- 2 · чем я отличаюсь -->
+<section class="screen" data-s="2">
+  <p class="eyebrow">Шаг 2 · тетрадь, лист 6</p>
+  <h2>Чем я <span class="r">отличаюсь</span></h2>
+  <div class="author"><div class="q">«Место вашего продукта не на полке. Оно в голове у клиента».</div><div class="name">Эл Райс и Джек Траут</div><div class="meta">«Позиционирование» · 1981</div></div>
+  <p>Одна фраза, по которой клиент выбирает вас, а не соседку по чату. Выберите по одному в каждой колонке или впишите своё.</p>
+  <div class="cols" id="cols"></div>
+  <div class="preview" id="phrase"></div>
+  <div class="check">
+    <div class="eyebrow red" style="margin:0">Проверка</div>
+    <div>Подставьте вместо себя конкурента. Фраза осталась правдой?</div>
+    <div class="row"><button class="btn sm" id="chkYes" type="button">Да, осталась</button><button class="btn sm" id="chkNo" type="button">Нет, это только про меня</button></div>
+    <div class="note hide" id="chkNote"></div>
+  </div>
+</section>
+
+<!-- 3 · что и почём -->
+<section class="screen" data-s="3">
+  <p class="eyebrow">Шаг 3 · тетрадь, лист 8</p>
+  <h2>Что и <span class="r">почём</span></h2>
+  <div class="author"><div class="q">«Первая цифра, которую услышал человек, сдвигает все следующие».</div><div class="name">Даниэль Канеман</div><div class="meta">Нобелевская премия · 2002</div></div>
+  <p>Сначала считаем, сколько на самом деле стоит ваш час. Потом упаковываем в три цены. Цифры ниже из примера с тортом<span class="ex">пример</span>. Замените на свои.</p>
+  <h3>Мой расчёт</h3>
+  <div class="calc">
+    <label class="f"><span>Хочу в месяц, ₽</span><input type="number" id="want" value="60000" inputmode="numeric"></label>
+    <label class="f"><span>Постоянные в месяц, ₽ (связь, подписки, взнос ИП)</span><input type="number" id="fixed" value="8000" inputmode="numeric"></label>
+    <label class="f"><span>Моя цена за заказ, ₽</span><input type="number" id="price" value="4800" inputmode="numeric"></label>
+    <label class="f"><span>Продукты и материалы на заказ, ₽</span><input type="number" id="cost" value="1900" inputmode="numeric"></label>
+    <label class="f"><span>Налог</span><select id="tax"><option value="6">ИП, УСН 6% с оборота</option><option value="4">Самозанятый, клиенты люди, 4%</option><option value="6.01">Самозанятый, клиенты компании, 6%</option></select></label>
+    <label class="f"><span>Часов на один заказ</span><input type="number" id="hrs" value="9" step="0.5" inputmode="decimal"></label>
+    <label class="f"><span>Часов в неделю могу работать</span><input type="number" id="week" value="25" inputmode="numeric"></label>
+  </div>
+  <div class="res">
+    <div class="tile"><div class="v" id="rLeft">—</div><div class="k">остаётся с заказа, ₽</div></div>
+    <div class="tile red"><div class="v red" id="rHour">—</div><div class="k">рублей в час</div></div>
+    <div class="tile"><div class="v" id="rOrders">—</div><div class="k">нужно заказов в месяц</div></div>
+    <div class="tile"><div class="v" id="rHours">—</div><div class="k">нужно часов · есть <span id="rHave">—</span></div></div>
+  </div>
+  <div class="verdict" id="verdict"></div>
+  <p class="small">Ручек только две: цена и время на заказ. Или часть времени отдать другому.</p>
+  <div class="knobs">
+    <button class="btn sm" type="button" id="kPrice">Цена +10%</button>
+    <button class="btn sm" type="button" id="kTime">Время −1 ч</button>
+    <button class="btn sm" type="button" id="kDeleg">Делегировать</button>
+    <button class="btn sm" type="button" id="kReset">Вернуть как было</button>
+  </div>
+  <div class="deleg" id="deleg">
+    <label class="f"><span>Отдаю часов с заказа</span><input type="number" id="dHrs" value="1.5" step="0.5" inputmode="decimal"></label>
+    <label class="f"><span>Плачу за это, ₽ за заказ</span><input type="number" id="dCost" value="400" inputmode="numeric"></label>
+  </div>
+  <h3>Три пакета</h3>
+  <p class="small">Различаются объёмом и заботой, не качеством. Первым называйте средний или максимум.</p>
+  <div class="pk">
+    <div class="row"><div class="nm">Базовый</div><label class="f"><span>цена, ₽</span><input type="number" id="p1" inputmode="numeric" placeholder="0"></label><label class="f what"><span>что входит</span><input type="text" id="w1" value="самовывоз"></label></div>
+    <div class="row"><div class="nm">Стандарт</div><label class="f"><span>цена, ₽</span><input type="number" id="p2" inputmode="numeric" placeholder="0"></label><label class="f what"><span>что входит</span><input type="text" id="w2" value="с доставкой"></label></div>
+    <div class="row max"><div class="nm">Максимум</div><label class="f"><span>цена, ₽</span><input type="number" id="p3" inputmode="numeric" placeholder="0"></label><label class="f what"><span>что входит</span><input type="text" id="w3" value="доставка, свечи, подпись"></label></div>
+  </div>
+  <div class="note" id="discNote"></div>
+</section>
+
+<!-- 4 · где искать клиента -->
+<section class="screen" data-s="4">
+  <p class="eyebrow">Шаг 4 · тетрадь, листы 9 и 10</p>
+  <h2>Где искать <span class="r">клиента</span></h2>
+  <div class="author"><div class="q">«Работу находят через знакомых знакомых».</div><div class="name">Марк Грановеттер</div><div class="meta">Стэнфорд · 1973</div></div>
+  <div class="seg" id="seg4"><button type="button" data-m="new" class="on">Начинаю с нуля</button><button type="button" data-m="have">Клиенты уже есть</button></div>
+
+  <div id="m-new">
+    <h3>Обвожу два канала</h3>
+    <p class="small">Два канала по три часа в неделю работают. Пять по часу нет. Сроки ориентировочные: когда обычно приходит первый заказ, если делать регулярно.</p>
+    <div class="list" id="chan"></div>
+    <h3>Первое действие</h3>
+    <div id="firstActs"><p class="small">Выберите два канала выше, поля появятся здесь.</p></div>
+  </div>
+
+  <div id="m-have" style="display:none">
+    <h3>Что я даю за отзыв</h3>
+    <p class="small">Довольные готовы рекомендовать почти все. Рекомендуют единицы. Разницу закрывает одно: вы попросили. Прямо сейчас, при вас.</p>
+    <div class="chips" id="give"></div>
+    <label class="f"><span>Своё</span><input type="text" id="giveOwn" placeholder="что даю за отзыв"></label>
+    <h3>Где лежит мой отзыв</h3>
+    <div class="chips" id="where"></div>
+    <h3>Мой скрипт</h3>
+    <textarea id="script">Оставьте, пожалуйста, отзыв прямо сейчас, я покажу где. А я вам за это …</textarea>
+  </div>
+</section>
+
+<!-- 5 · цель и контроль -->
+<section class="screen" data-s="5">
+  <p class="eyebrow">Шаг 5 · тетрадь, лист 11</p>
+  <h2>Цель и <span class="r">контроль</span></h2>
+  <div class="author"><div class="q">«Конкретная цель работает. „Постараюсь“ не работает».</div><div class="name">Эдвин Локк и Гэри Латэм</div><div class="meta">США · 1990</div></div>
+  <p>Результат нельзя сделать напрямую, можно сделать только действие. Три действия на неделю под ваши два канала. Не больше: больше не сделают.</p>
+  <h3>Обвожу три</h3>
+  <div class="list" id="acts"></div>
+  <h3>День, когда смотрю цифры</h3>
+  <div class="days" id="days"></div>
+  <p class="small">В этот день открываете таблицу учёта (лист 14) и у каждого нового клиента спрашиваете: «откуда вы обо мне узнали?»</p>
+</section>
+
+<!-- 6 · итог -->
+<section class="screen" data-s="6">
+  <p class="eyebrow">Шаг 6 · тетрадь, лист 12</p>
+  <h2>Мои шесть <span class="r">решений</span></h2>
+  <div class="q" id="planSub">Полтора часа назад этого не было.</div>
+  <div class="plan" id="plan"></div>
+  <div class="acts">
+    <button class="btn pri" type="button" id="copyBtn">Скопировать план</button>
+    <a class="btn" id="tgShare" href="#" target="_blank" rel="noopener">Отправить себе в Telegram</a>
+    <button class="btn sm" type="button" id="resetBtn">Начать заново</button>
+  </div>
+  <div class="tg">
+    <div class="eyebrow red" style="margin:0">Подарок · всё, что было сегодня</div>
+    <div>Презентация, тетрадь в PDF и калькулятор себестоимости лежат в закреплённом посте канала.</div>
+    <a href="https://t.me/ne_ruchkami" target="_blank" rel="noopener">t.me/ne_ruchkami</a>
+  </div>
+  <div class="q" style="margin-top:26px">«Имейте мужество следовать своему сердцу и интуиции».</div>
+  <p class="small">Стив Джобс · Стэнфорд · 2005</p>
+  <div class="foot">Елена Сорокина · продюсер, ИИ-стратег · Telegram @ne_ruchkami</div>
+</section>
+
+</main>
+
+<nav class="bot"><div class="in">
+  <button class="btn" type="button" id="back">Назад</button>
+  <span class="step" id="navLbl"></span>
+  <button class="btn red" type="button" id="next">Начать</button>
+</div></nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var S={};                       // всё состояние
+var KEY='ymp-plan-v1';
+try{ S=JSON.parse(localStorage.getItem(KEY)||'{}')||{} }catch(e){ S={} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)) }catch(e){} }
+function toast(t){ var e=$('toast'); e.textContent=t; e.classList.add('on'); setTimeout(function(){e.classList.remove('on')},1800) }
+function fmt(n){ return Math.round(n).toLocaleString('ru-RU') }
+
+/* ---------- данные ---------- */
+var TPL1=[
+ {t:'Мама, двое детей, заказывает к праздникам.', c2:'вовремя, без сюрпризов', c3:'боится, что не успеете · подтверждаю дату и присылаю фото за день'},
+ {t:'Работает посменно, свободна вечером и в субботу.', c2:'без звонков, запись онлайн', c3:'боится сменить мастера и получить хуже · показываю работы и первую процедуру делаю короткой'},
+ {t:'Офис, заказывает для коллег.', c2:'чек, безнал, к времени', c3:'боится, что будет неловко перед коллегами · подтверждаю заказ письменно, привожу сама'},
+ {t:'Пенсионерка из соседнего дома.', c2:'недорого, рядом, по-человечески', c3:'боится, что обманут · называю цену до начала, письменно'}
+];
+var COLS=[
+ {k:'who',h:'Кто',o:['кондитер','мастер маникюра','клинер','репетитор','швея']},
+ {k:'how',h:'Который',o:['фиксирует цену письменно до начала','показывает инструменты до работы','переделает бесплатно','приезжает сам к 9 утра','делает пробник до заказа']},
+ {k:'whom',h:'Для кого',o:['для мам, которым некогда','для детских праздников','для аллергиков','для офисов','для тех, кто ходит постоянно']},
+ {k:'where',h:'Где',o:['в моём районе','в моём ЖК','в центре','везде с доставкой','онлайн']}
+];
+var CHAN=[['Знакомые напрямую','1–3 дня','написать пяти знакомым: «я теперь делаю это на заказ, вот фото»'],['Чаты дома и района','1–7 дней','выложить три фото работ в чат дома'],['Авито Услуги','3–14 дней','завести карточку с ценой и фото'],['Партнёры-смежники','1–4 недели','договориться с одним смежником об обмене клиентами'],['Карты Яндекс, 2ГИС','2–6 недель','создать карточку и попросить первый отзыв'],['Сарафан как система','со 2 месяца','положить визитку в каждый заказ'],['Соцсети с нуля','2–4 месяца','сфотографировать процесс работы, выложить три поста'],['Свой канал','','']];
+var GIVE=['маленький подарок в заказ','бесплатное дополнение к услуге','скидка на второй заказ'];
+var WHERE=['Яндекс Карты','Авито','2ГИС','моя страница'];
+var ACTS=['Написать пяти знакомым: «я теперь делаю это на заказ, вот фото»','Выложить три фото работ в чат дома','Завести карточку на Авито Услуги','Договориться с одним смежником об обмене клиентами','Положить визитку в каждый заказ','Попросить последнего клиента оставить отзыв','Сфотографировать процесс работы','Написать в чат родителей сада или школы','Посчитать цену по формуле с листа 7','Написать всем, кто спрашивал и не заказал'];
+var DAYS=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+
+/* ---------- привязка простых полей ---------- */
+var FIELDS=['name','biz','c1','c2','c3','want','fixed','price','cost','tax','hrs','week','dHrs','dCost','p1','p2','p3','w1','w2','w3','giveOwn','script','whoOwn','howOwn','whomOwn','whereOwn','chanOwn'];
+function bindFields(){
+  FIELDS.forEach(function(id){ var el=$(id); if(!el) return;
+    if(S[id]!==undefined) el.value=S[id];
+    el.addEventListener('input',function(){ S[id]=el.value; save(); onChange(id) });
+    el.addEventListener('change',function(){ S[id]=el.value; save(); onChange(id) });
+  });
+}
+function onChange(id){
+  if(['want','fixed','price','cost','tax','hrs','week','dHrs','dCost','p1','p2','p3'].indexOf(id)>=0) calc();
+  if(/Own$/.test(id)) phrase();
+  if(id==='chanOwn') renderFirst();
+}
+
+/* ---------- экран 1: шаблоны ---------- */
+(function(){ var box=$('tpl1');
+  TPL1.forEach(function(t){ var b=document.createElement('button'); b.type='button';
+    b.innerHTML='<b>'+t.t+'</b>Важно: '+t.c2+'. Боится: '+t.c3.split(' · ')[0].replace('боится, ','').replace('боится ','')+'.';
+    b.addEventListener('click',function(){ $('c1').value=t.t; $('c2').value=t.c2; $('c3').value=t.c3; ['c1','c2','c3'].forEach(function(k){S[k]=$(k).value}); save(); toast('Подставила. Допишите своё.') });
+    box.appendChild(b) });
+})();
+
+/* ---------- экран 2: конструктор ---------- */
+S.pos=S.pos||{};
+(function(){ var box=$('cols');
+  COLS.forEach(function(c){ var d=document.createElement('div'); d.className='col';
+    var h=document.createElement('h4'); h.textContent=c.h; d.appendChild(h);
+    var ch=document.createElement('div'); ch.className='chips';
+    c.o.forEach(function(o){ var b=document.createElement('button'); b.type='button'; b.className='chip'+(S.pos[c.k]===o?' on':''); b.textContent=o;
+      b.addEventListener('click',function(){ S.pos[c.k]=(S.pos[c.k]===o?'':o); save(); ch.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x.textContent===S.pos[c.k])}); phrase() });
+      ch.appendChild(b) });
+    d.appendChild(ch);
+    var inp=document.createElement('input'); inp.type='text'; inp.id=c.k+'Own'; inp.placeholder='своё'; d.appendChild(inp);
+    box.appendChild(d) });
+})();
+function pick(k){ var own=(S[k+'Own']||'').trim(); return own||S.pos[k]||'' }
+function phrase(){
+  var who=pick('who'),how=pick('how'),whom=pick('whom'),where=pick('where');
+  var ph=function(t,p){ return t?'<span>'+t+'</span>':'<span class="ph">['+p+']</span>' };
+  $('phrase').innerHTML='Я <span class="r">единственный</span> '+ph(who,'кто')+', который '+ph(how,'как')+', '+ph(whom,'для кого')+' '+ph(where,'где')+'.';
+  S.phraseText=(who&&how&&whom&&where)?('Я единственный '+who+', который '+how+', '+whom+' '+where+'.'):'';
+  save();
+}
+$('chkYes').addEventListener('click',function(){ var n=$('chkNote'); n.className='note'; n.textContent='Значит, фраза пока про всех. Вернитесь к колонке «который» и выберите то, что делаете только вы.'; S.chk='yes'; save() });
+$('chkNo').addEventListener('click',function(){ var n=$('chkNote'); n.className='note ok'; n.textContent='Фраза ваша. Так и говорите её в чате, на Авито и по телефону.'; S.chk='no'; save() });
+
+/* ---------- экран 3: калькулятор ---------- */
+var BASE={want:'60000',fixed:'8000',price:'4800',cost:'1900',hrs:'9',week:'25'};
+S.deleg=S.deleg||false;
+function num(id){ var v=parseFloat(String($(id).value).replace(',','.')); return isNaN(v)?0:v }
+function calc(){
+  var want=num('want'),fixed=num('fixed'),price=num('price'),cost=num('cost'),hrs=num('hrs'),week=num('week');
+  var rate=parseFloat($('tax').value)>=6?0.06:0.04;
+  var dH=S.deleg?num('dHrs'):0, dC=S.deleg?num('dCost'):0;
+  var left=price-cost-price*rate-dC;
+  var h=Math.max(hrs-dH,0.1);
+  var perHour=left/h;
+  var need=want+fixed;
+  var orders=left>0?need/left:Infinity;
+  var needH=orders*h;
+  var have=week*4;
+  $('rLeft').textContent=fmt(left);
+  $('rHour').textContent=isFinite(perHour)?fmt(perHour):'—';
+  $('rOrders').textContent=isFinite(orders)?Math.round(orders):'—';
+  $('rHours').textContent=isFinite(needH)?fmt(needH):'—';
+  $('rHave').textContent=fmt(have);
+  var v=$('verdict');
+  if(!isFinite(orders)||left<=0){ v.className='verdict no'; v.innerHTML='<b>Не сходится.</b> С заказа не остаётся ничего: продукты и налог съедают всю цену. Поднимайте цену.' }
+  else if(needH<=have){ v.className='verdict yes'; v.innerHTML='<b>Сходится.</b> Нужно '+fmt(needH)+' часов в месяц, есть '+fmt(have)+'. Запас '+fmt(have-needH)+' ч.' }
+  else { v.className='verdict no'; v.innerHTML='<b>Не сходится.</b> Нужно '+fmt(needH)+' часов, есть '+fmt(have)+'. Крутите цену, время или отдайте часть работы.' }
+  var disc=price*0.1, moreP=left-disc>0?Math.round((left/(left-disc)-1)*100):null;
+  $('discNote').textContent=moreP!==null?('Скидка 10% на ваш заказ съедает '+fmt(disc)+' ₽ из '+fmt(left)+'. Чтобы заработать столько же, заказов нужно на '+moreP+'% больше. Вместо скидки: меньше объёма или бонус.'):'Скидка 10% при ваших цифрах уводит заказ в минус.';
+  S.calc={left:left,perHour:perHour,orders:isFinite(orders)?Math.round(orders):null,needH:needH,have:have,ok:isFinite(needH)&&needH<=have,price:price};
+  save();
+}
+$('kPrice').addEventListener('click',function(){ $('price').value=Math.round(num('price')*1.1); S.price=$('price').value; calc(); toast('Цена +10%') });
+$('kTime').addEventListener('click',function(){ $('hrs').value=Math.max(num('hrs')-1,0.5); S.hrs=$('hrs').value; calc(); toast('Время −1 ч') });
+$('kDeleg').addEventListener('click',function(){ S.deleg=!S.deleg; $('deleg').classList.toggle('on',S.deleg); $('kDeleg').classList.toggle('pri',S.deleg); calc(); toast(S.deleg?'Часть работы отдана':'Делаю всё сама') });
+$('kReset').addEventListener('click',function(){ Object.keys(BASE).forEach(function(k){$(k).value=BASE[k]; S[k]=BASE[k]}); S.deleg=false; $('deleg').classList.remove('on'); $('kDeleg').classList.remove('pri'); calc() });
+$('deleg').classList.toggle('on',!!S.deleg); $('kDeleg').classList.toggle('pri',!!S.deleg);
+
+/* ---------- экран 4: каналы и отзыв ---------- */
+S.mode=S.mode||'new'; S.chan=S.chan||[]; S.first=S.first||{}; S.give=S.give||[]; S.where=S.where||[];
+$('seg4').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ S.mode=b.dataset.m; save(); mode4() }) });
+function mode4(){ $('seg4').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.m===S.mode)}); $('m-new').style.display=S.mode==='new'?'':'none'; $('m-have').style.display=S.mode==='have'?'':'none' }
+(function(){ var box=$('chan');
+  CHAN.forEach(function(c,i){ var it=document.createElement('div'); it.className='item'; it.setAttribute('role','checkbox'); it.tabIndex=0;
+    it.innerHTML='<span class="box"></span><span class="t">'+(i===7?'Свой канал: <input type="text" id="chanOwn" placeholder="какой">':c[0])+'</span><span class="m">'+c[1]+'</span>';
+    var tog=function(e){ if(e&&e.target&&e.target.tagName==='INPUT') return; var on=S.chan.indexOf(i)>=0; if(!on&&S.chan.length>=2){ toast('Только два канала. Снимите один.'); return } if(on) S.chan=S.chan.filter(function(x){return x!==i}); else S.chan.push(i); save(); renderChan(); renderFirst() };
+    it.addEventListener('click',tog); it.addEventListener('keydown',function(e){ if(e.key===' '||e.key==='Enter'){e.preventDefault();tog()} });
+    box.appendChild(it) });
+})();
+function renderChan(){ var items=$('chan').querySelectorAll('.item'); items.forEach(function(it,i){ var on=S.chan.indexOf(i)>=0; it.classList.toggle('on',on); it.classList.toggle('dis',!on&&S.chan.length>=2); it.setAttribute('aria-checked',on) }) }
+function chanName(i){ return i===7?('Свой канал'+((S.chanOwn||'').trim()?': '+S.chanOwn.trim():'')):CHAN[i][0] }
+function renderFirst(){ var box=$('firstActs'); box.innerHTML='';
+  if(!S.chan.length){ box.innerHTML='<p class="small">Выберите два канала выше, поля появятся здесь.</p>'; return }
+  S.chan.forEach(function(i){ var l=document.createElement('label'); l.className='f'; l.innerHTML='<span>'+chanName(i)+' · что делаю</span>'; var inp=document.createElement('input'); inp.type='text'; inp.id='first'+i; inp.placeholder=CHAN[i][2]||'первое действие'; inp.value=S.first[i]||''; inp.addEventListener('input',function(){ S.first[i]=inp.value; save() }); l.appendChild(inp); box.appendChild(l) }) }
+function chipsMulti(boxId,list,key){ var box=$(boxId); box.innerHTML=''; list.forEach(function(o){ var b=document.createElement('button'); b.type='button'; b.className='chip'+(S[key].indexOf(o)>=0?' on':''); b.textContent=o; b.addEventListener('click',function(){ var j=S[key].indexOf(o); if(j>=0) S[key].splice(j,1); else S[key].push(o); save(); b.classList.toggle('on',j<0) }); box.appendChild(b) }) }
+chipsMulti('give',GIVE,'give'); chipsMulti('where',WHERE,'where');
+
+/* ---------- экран 5: действия и день ---------- */
+S.acts=S.acts||[]; S.due=S.due||{}; S.ownAct=S.ownAct||'';
+(function(){ var box=$('acts');
+  ACTS.concat(['__own']).forEach(function(a,i){ var it=document.createElement('div'); it.className='item'; it.tabIndex=0; it.setAttribute('role','checkbox');
+    it.innerHTML='<span class="box"></span><span class="t">'+(a==='__own'?'Своё: <input type="text" id="ownAct" placeholder="какое действие">':a)+'</span><span class="m"></span>';
+    var sub=document.createElement('div'); sub.className='sub'; sub.innerHTML='<label class="f"><span>сделаю до</span><input type="date" id="due'+i+'"></label>';
+    var tog=function(e){ if(e&&e.target&&e.target.tagName==='INPUT') return; var on=S.acts.indexOf(i)>=0; if(!on&&S.acts.length>=3){ toast('Только три действия. Больше не сделают.'); return } if(on) S.acts=S.acts.filter(function(x){return x!==i}); else S.acts.push(i); save(); renderActs() };
+    it.addEventListener('click',tog); it.addEventListener('keydown',function(e){ if(e.key===' '||e.key==='Enter'){e.preventDefault();tog()} });
+    box.appendChild(it); box.appendChild(sub);
+    var d=sub.querySelector('input'); d.value=S.due[i]||''; d.addEventListener('change',function(){ S.due[i]=d.value; save() });
+  });
+  var own=$('ownAct'); own.value=S.ownAct; own.addEventListener('input',function(){ S.ownAct=own.value; save() });
+})();
+function renderActs(){ var items=$('acts').querySelectorAll('.item'), subs=$('acts').querySelectorAll('.sub'); items.forEach(function(it,i){ var on=S.acts.indexOf(i)>=0; it.classList.toggle('on',on); it.classList.toggle('dis',!on&&S.acts.length>=3); it.setAttribute('aria-checked',on); subs[i].classList.toggle('on',on) }) }
+(function(){ var box=$('days'); DAYS.forEach(function(d){ var b=document.createElement('button'); b.type='button'; b.textContent=d; b.classList.toggle('on',S.day===d); b.addEventListener('click',function(){ S.day=d; save(); box.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.textContent===d)}) }); box.appendChild(b) }) })();
+
+/* ---------- экран 6: план ---------- */
+function actName(i){ return i===ACTS.length?('Своё: '+(S.ownAct||'').trim()):ACTS[i] }
+function dueTxt(i){ if(!S.due[i]) return ''; var d=new Date(S.due[i]); return isNaN(d)?'':' · до '+d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) }
+function planData(){
+  var c=S.calc||{};
+  var pk=[['Базовый',S.p1,S.w1],['Стандарт',S.p2,S.w2],['Максимум',S.p3,S.w3]].filter(function(p){return p[1]}).map(function(p){return p[0]+' '+fmt(+p[1])+' ₽ · '+(p[2]||'')}).join('\n');
+  var d05=S.mode==='have'
+    ? ('За отзыв даю: '+(S.give.concat((S.giveOwn||'').trim()?[S.giveOwn.trim()]:[]).join(', ')||'…')+'\nОтзыв лежит: '+(S.where.join(', ')||'…')+'\nСкрипт: '+((S.script||'').trim()||'…'))
+    : S.chan.map(function(i){return chanName(i)+': '+((S.first[i]||'').trim()||CHAN[i][2]||'…')}).join('\n');
+  return [
+    ['01','Мой клиент',[S.c1,S.c2?('Важно: '+S.c2):'',S.c3?('Боится: '+S.c3):''].filter(Boolean).join('\n'),1],
+    ['02','Чем отличаюсь',S.phraseText||'',2],
+    ['03','Три пакета',pk,3],
+    ['04','Моя цена и заказов до цели',c.price?('Цена '+fmt(c.price)+' ₽ · с заказа остаётся '+fmt(c.left)+' ₽ · '+fmt(c.perHour)+' ₽ в час\nНужно заказов в месяц: '+(c.orders||'—')+' · часов: '+fmt(c.needH)+' из '+fmt(c.have)+' · '+(c.ok?'сходится':'не сходится')):'',3],
+    ['05',S.mode==='have'?'Что даю за отзыв':'Два канала и первое действие',d05,4],
+    ['06','Три действия и день учёта',S.acts.map(function(i){return actName(i)+dueTxt(i)}).join('\n')+(S.day?('\nДень цифр: '+S.day):''),5]
+  ];
+}
+function renderPlan(){
+  var box=$('plan'); box.innerHTML='';
+  $('planSub').textContent=(S.name?S.name+', п':'П')+'олтора часа назад этого не было.';
+  planData().forEach(function(r){ var d=document.createElement('div'); d.className='d';
+    d.innerHTML='<div class="n">'+r[0]+'</div><div><div class="h">'+r[1]+'<a href="#" data-go="'+r[3]+'">изменить</a></div><div class="b'+(r[2]?'':' empty')+'">'+(r[2]||'пока пусто')+'</div></div>';
+    d.querySelector('a').addEventListener('click',function(e){ e.preventDefault(); go(r[3]) });
+    box.appendChild(d) });
+  var text=planText(); $('tgShare').href='https://t.me/share/url?url='+encodeURIComponent('https://t.me/ne_ruchkami')+'&text='+encodeURIComponent(text);
+}
+function planText(){ var head='МОЙ МАРКЕТИНГОВЫЙ ПЛАН'+(S.name?' · '+S.name:'')+(S.biz?' · '+S.biz:'')+'\n\n'; return head+planData().map(function(r){return r[0]+' '+r[1].toUpperCase()+'\n'+(r[2]||'…')}).join('\n\n')+'\n\nСобрано на занятии Елены Сорокиной · t.me/ne_ruchkami' }
+$('copyBtn').addEventListener('click',function(){ var t=planText(); var done=function(){toast('План скопирован')}; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,function(){fallback(t);done()}); else{fallback(t);done()} function fallback(t){ var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} document.body.removeChild(ta) } });
+$('resetBtn').addEventListener('click',function(){ if(!confirm('Стереть все ответы и начать заново?')) return; S={}; try{localStorage.removeItem(KEY)}catch(e){} location.reload() });
+
+/* ---------- навигация ---------- */
+var cur=typeof S.cur==='number'?S.cur:0;
+var NAMES=['','Кому я продаю','Чем я отличаюсь','Что и почём','Где искать клиента','Цель и контроль','Мои шесть решений'];
+function go(n){ cur=Math.max(0,Math.min(6,n)); S.cur=cur; save();
+  document.querySelectorAll('section.screen').forEach(function(s){ s.classList.toggle('on',+s.dataset.s===cur) });
+  var segs=$('segs').querySelectorAll('i'); segs.forEach(function(i,k){ var st=k+1; i.className=st<cur||(cur===6&&st===6)?'done':(st===cur?'cur':'') });
+  $('progLbl').textContent=cur===0?'Шесть шагов':('Шаг '+cur+' из 6');
+  $('navLbl').textContent=cur===0?'':NAMES[cur];
+  $('back').style.visibility=cur===0?'hidden':'visible';
+  $('next').textContent=cur===0?'Начать':(cur===5?'Собрать план':(cur===6?'В начало':'Дальше'));
+  if(cur===6) renderPlan();
+  window.scrollTo({top:0,behavior:'auto'});
+}
+$('next').addEventListener('click',function(){ if(cur===6){ go(0); return } if(cur===5&&!S.acts.length){ toast('Обведите хотя бы одно действие'); } go(cur+1) });
+$('back').addEventListener('click',function(){ go(cur-1) });
+
+/* ---------- старт ---------- */
+bindFields(); phrase(); calc(); mode4(); renderChan(); renderFirst(); renderActs(); go(cur);
+})();
+</script>
+</body></html>

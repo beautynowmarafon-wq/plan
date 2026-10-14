@@ -17,20 +17,20 @@ html,body{height:100%}
 body{margin:0;color:var(--ink);font-family:var(--f-body);
   background:radial-gradient(120% 70% at 50% 38%,#1B2366 0%,var(--night2) 30%,var(--night) 75%) fixed,var(--night);overflow-x:hidden}
 #sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.app{position:relative;z-index:1;min-height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;box-sizing:border-box;
-  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:0 20px}
+.app{position:relative;z-index:1;height:100dvh;min-height:0;overflow:hidden;max-width:480px;margin:0 auto;display:flex;flex-direction:column;box-sizing:border-box;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:0 10px}
 .stripe{height:5px;background:var(--red);margin:0 calc(-1 * max(20px,env(safe-area-inset-left,0px)))}
 .top{display:flex;justify-content:space-between;padding-top:16px;font:500 11px/1 var(--f-mono);letter-spacing:.14em}
 .top .who{color:#FF4A3D} .top .role{color:var(--muted)}
-.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding-block:18px;text-align:center}
-h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.02em;text-wrap:balance;
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:clamp(6px,1.6dvh,16px);padding-block:clamp(6px,1.5dvh,16px);text-align:center}
+h1{font:700 clamp(32px,5.4dvh,46px)/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.02em;text-wrap:balance;
   background:linear-gradient(180deg,#FFFFFF 10%,#BFD0FF 60%,var(--gold) 120%);-webkit-background-clip:text;background-clip:text;color:transparent;
   text-shadow:0 0 28px rgba(91,140,255,.35)}
-.lead{font:400 italic 21px/1.3 var(--f-accent);color:#C9D5FF;margin:0;max-width:28ch;text-wrap:balance}
+.lead{font:400 italic clamp(17px,2.5dvh,21px)/1.3 var(--f-accent);color:#C9D5FF;margin:0;max-width:28ch;text-wrap:balance}
 .eyebrow{font:500 11px/1 var(--f-mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin:0}
 
 /* шар */
-.orb{position:relative;width:min(290px,74vw);aspect-ratio:1;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:34px}
+.orb{position:relative;width:min(290px,72vw,36dvh);flex:none;aspect-ratio:1;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:clamp(26px,4.2dvh,36px)}
 .orb:focus-visible{outline:2px solid var(--gold);outline-offset:10px;border-radius:50%}
 .halo{position:absolute;inset:-22%;border-radius:50%;background:radial-gradient(circle,rgba(91,140,255,.55) 0%,rgba(139,92,246,.28) 38%,rgba(91,140,255,0) 68%);
   animation:breathe 4s ease-in-out infinite}
@@ -57,7 +57,7 @@ h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spa
 .msg .w{display:inline-block;white-space:nowrap}
 .msg .w span{display:inline-block;opacity:0;filter:blur(8px);transform:translateY(6px) scale(.9);animation:emerge .9s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes emerge{to{opacity:1;filter:blur(0);transform:none}}
-.full{font:400 italic 22px/1.35 var(--f-accent);color:#E6ECFF;margin:0;max-width:24ch;text-wrap:balance;min-height:3em}
+.full{font:400 italic clamp(17px,2.6dvh,22px)/1.3 var(--f-accent);color:#E6ECFF;margin:0;max-width:24ch;text-wrap:balance;min-height:3em}
 .full span{opacity:0;filter:blur(6px);animation:emerge .8s ease forwards}
 .q{position:absolute;font:700 60px/1 var(--f-display);color:#DCE6FF;text-shadow:0 0 18px var(--glow),0 0 40px var(--violet);animation:flicker 3s ease-in-out infinite}
 .zzz{position:absolute;display:flex;gap:4px;font:600 22px/1 var(--f-display);color:#9FB6FF}
@@ -80,7 +80,7 @@ h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spa
 @keyframes shake{10%,90%{transform:translate(-3px,0) rotate(-2deg)}20%,80%{transform:translate(6px,-2px) rotate(3deg)}30%,50%,70%{transform:translate(-11px,2px) rotate(-6deg)}40%,60%{transform:translate(11px,-3px) rotate(6deg)}}
 
 /* подсказки-шаги */
-.step{display:flex;align-items:center;gap:12px;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(190,210,255,.18);border-radius:16px;padding:12px 16px;width:100%;box-sizing:border-box}
+.step{flex:none;display:flex;align-items:center;gap:12px;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(190,210,255,.18);border-radius:16px;padding:clamp(8px,1.3dvh,12px) 16px;width:100%;box-sizing:border-box}
 .step .num{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 15px/1 var(--f-display);color:var(--night);background:var(--gold)}
 .step p{margin:0;font:500 15px/1.35 var(--f-body);color:var(--ink)}
 .step p span{color:var(--muted);font-weight:400}
@@ -93,11 +93,11 @@ h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spa
 .dots{display:flex;gap:10px}
 .dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--gold);display:block}
 .dots i.f{background:var(--gold);box-shadow:0 0 10px var(--gold)}
-.phrase{font:500 21px/1.35 var(--f-body);margin:0;max-width:24ch;text-wrap:balance}
+.phrase{font:500 clamp(16px,2.3dvh,21px)/1.35 var(--f-body);margin:0;max-width:24ch;text-wrap:balance}
 .kicker{font:600 13px/1 var(--f-display);letter-spacing:.16em;text-transform:uppercase;color:var(--night);background:var(--gold);padding:7px 14px;border-radius:999px}
 .kicker.red{background:var(--red);color:#fff}
 
-.btn{appearance:none;border:0;cursor:pointer;width:100%;min-height:58px;border-radius:16px;font:600 19px/1 var(--f-display);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;box-sizing:border-box}
+.btn{appearance:none;border:0;cursor:pointer;width:100%;min-height:clamp(48px,6.6dvh,58px);border-radius:16px;font:600 19px/1 var(--f-display);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;box-sizing:border-box}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .btn.magic{color:#fff;background:linear-gradient(135deg,#3B6BFF 0%,var(--cobalt) 45%,#6D4AE6 100%);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 10px 30px rgba(91,140,255,.45);position:relative;overflow:hidden}
 .btn.magic::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:sheen 2.6s ease-in-out infinite}
@@ -123,7 +123,9 @@ h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spa
   <div class="top"><span class="who">ЕЛЕНА СОРОКИНА</span><span class="role">ПРОДЮСЕР · ИИ-СТРАТЕГ</span></div>
   <main class="stage" id="stage" aria-live="polite"></main>
   <div class="sign">АПР · 23 октября</div>
-  <nav class="demo" aria-label="Демо: экраны">
+  <div class="toast" id="toast" hidden></div>
+</div>
+  <nav class="demo" style="max-width:480px;margin:0 auto 24px;padding-left:20px;padding-right:20px;box-sizing:border-box" id="demo" aria-label="Демо: экраны">
     <span>ДЕМО ДЛЯ ЛЕНЫ · ЭКРАНЫ</span>
     <button id="d0" data-s="start">1 Старт</button>
     <button id="d1" data-s="ball">2 Тряси</button>
@@ -131,38 +133,37 @@ h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spa
     <button id="d3" data-s="p2">4 Мудрость</button>
     <button id="d4" data-s="tired">5 Шар устал</button>
   </nav>
-  <div class="toast" id="toast" hidden></div>
-</div>
+
 
 <script>
 const BOT_URL = "https://t.me/ИМЯ_БОТА?start=apr2310";
 const JOKES = [
-  "Сними себя без фильтра. Тебя и так все видели в 9 утра без кофе.",
-  "Сними, как всё пошло не по плану. Идеальным не верят, а над факапом смеются и покупают.",
-  "Сними свою папку «выложу потом». Шар заглянул: там контента на год.",
-  "Сними, как в 23:00 пишешь клиенту «конечно, без проблем». Это и есть твой фирменный стиль.",
-  "Сними, что творится за кулисами. Спойлер: твой хаос продаёт лучше любой студии.",
-  "Сними, как объясняешь маме, чем ты занимаешься. Мама поняла, значит, клиент купит.",
-  "Хватит снимать двадцатый дубль. Шар видел первый, он был лучший.",
-  "Сними сотрудника, который знает о вас всё. Он смешнее тебя, смирись.",
-  "Сними ответ хейтеру. Шар за вежливость, но с огоньком.",
-  "Сними свою «скучную» работу. От чего ты зеваешь, у зрителя вырывается «ого».",
-  "Сними, во сколько тебе обошлась ошибка. Наберёт больше, чем твой прайс.",
-  "Хватит ждать вдохновения. Шар ждал, оно не пришло. Снимай сегодня."
+  "Ретроградный Меркурий не виноват в охватах. Виноват черновик, который ты не выложил.",
+  "Сегодня благоприятный день, чтобы снять сторис. Завтра тоже. И вчера был.",
+  "Карты Таро легли так: «Император», «Колесница» и «Сними уже, как ты работаешь».",
+  "Твои счастливые числа: 1 ролик в день и 0 ожидания вдохновения.",
+  "Скоро к тебе придут деньги из Reels. Но сначала в ленту должны прийти Reels.",
+  "Шар видит твою галерею: 4000 фото с работы и ни одного рилса. Шар в шоке.",
+  "Шар знает, что ты 40 минут выбираешь обложку. А клиент смотрит на тебя.",
+  "Шар слышит твоё «мне нечего показывать» и смеётся. Сними свой обычный вторник.",
+  "Твой идеальный ролик живёт в голове с 2023 года. Пора ему съезжать.",
+  "Сними, как всё пошло не по плану. Шар гарантирует: это будет твой самый просматриваемый ролик.",
+  "Шар видит, как ты в 23:00 пишешь клиенту «конечно, без проблем». Вот это и снимай.",
+  "Звёзды сошлись: твой бухгалтер в кадре соберёт больше, чем твоя реклама."
 ];
 const WISDOM = [
-  "Сними себя и не прячься за логотипом. Люди покупают у людей.",
+  "Шар заглянул в будущее. Там конкурент снял ролик, который ты придумал в марте. Снимай сегодня.",
+  "Сними себя, а не логотип. Логотип ещё ни разу не продал торт.",
+  "Блогер за 50 тысяч сыграет любовь к продукту. Твой бариста любит его бесплатно. Снимай бариста.",
+  "Тебе 100 раз задали один и тот же вопрос. Это не повод беситься, это готовый сценарий.",
+  "«Я не умею в кадре» говорят те, кто ни разу не пробовал. Сними 15 секунд. Шар разрешает плохо.",
+  "Хватит снимать «чтобы было». Сними то, после чего пишут «а сколько стоит?».",
+  "Шар слышит «у нас всё индивидуально». Шар ничего не понял. Покажи, как это выглядит на деле.",
+  "Сними, как ты споришь с поставщиком за качество. Это лучше любой рекламы.",
   "Сними кухню, а не витрину. Витрин полно у всех, а кухня есть только у тебя.",
-  "Сними свою команду. Блогер отработает за деньги, а свои за любовь к делу.",
-  "Сними вопрос, который тебе задают каждый день. Тебя от него тошнит, а клиенту он нужен.",
-  "Сними, почему у тебя дороже. Не оправдывайся, объясни. Цену продаёт контент.",
-  "Сними путь продукта от идеи до клиента. Видно, как делается, и хочется купить.",
-  "Сними результат клиента. Твоё «мы лучшие» никто не слышит, а чужое «вау» слышат все.",
-  "Сними то, что для тебя «обычно». Для зрителя это закулисье, и от него не оторваться.",
-  "Сними серию, а не шедевр. Один ролик это лотерея, десять роликов это система.",
-  "Сними ролик с задачей: продать, нанять, объяснить. Всё остальное хобби.",
-  "Сними, от чего ты отказываешься ради качества. Твои «нет» продают лучше твоих «да».",
-  "Сними сегодня. Неидеальный ролик в ленте сильнее идеального в черновиках."
+  "Ты не скучный. Скучно, когда тебя не видно. Включай камеру.",
+  "Один ролик это лотерея. Десять роликов это система. Шар за систему.",
+  "Неидеальный ролик в ленте продаёт. Идеальный в черновиках только греет самооценку."
 ];
 const short = t => { const s=t.split(/(?<=[.!?])\s/)[0]; return s.length<=64 ? s.replace(/[.]$/,"") : t.split(/[,:]/)[0]; };
 const letters = (t,step=.035,d0=0) => { let i=0; return t.split(" ").map(w=>`<span class="w">${[...w].map(c=>`<span style="animation-delay:${(d0+(i++)*step).toFixed(2)}s">${c}</span>`).join("")}</span>`).join(" "); };
@@ -217,8 +218,8 @@ function render(){
   if(s==="tired"){
     st.innerHTML = `<span class="kicker red">Бросок 3</span>
       ${orb('<span class="zzz"><b>Z</b><b>z</b><b>z</b></span>','sleep')}
-      <h1 style="font-size:34px">Всё. Шар устал.<br>Хватит развлекаться</h1>
-      <p class="phrase" style="font-size:18px">Хочешь не предсказание, а реальный список форматов, которые работают в разных нишах?</p>
+      <h1 style="font-size:clamp(26px,4.4dvh,34px)">Всё. Шар устал.<br>Хватит развлекаться</h1>
+      <p class="phrase" style="font-size:clamp(15px,2.2dvh,18px)">Хочешь не предсказание, а реальный список форматов, которые работают в разных нишах?</p>
       <div class="actions"><a class="btn red" href="${BOT_URL}" target="_blank" rel="noopener">Забрать список форматов</a>
       <p class="small">Бот пришлёт список и ссылку на мой канал</p></div>`;
     $("orb").onclick = () => { const b=$("orb"); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); };
@@ -308,6 +309,7 @@ document.querySelectorAll(".demo button").forEach(b=>b.onclick=()=>{
   if(s==="tired") state={screen:s,n:3,text:""};
   render(); fitMsg();
 });
+if(/github\.io$/.test(location.hostname) && location.hash!=="#demo"){ $("demo").hidden=true;  }
 render();
 </script>
 </body></html>

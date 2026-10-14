@@ -1,0 +1,313 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07081C"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style><title>Контент-шар</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Ночное небо, светящийся шар-оракул на подставке, звёзды и искры. Один экран телефона. Сознательно одна тёмная тема. */
+:root{
+  --night:#07081C; --night2:#141A4A; --ink:#F4F2FF; --muted:#A9ACD6;
+  --cobalt:#2456E0; --glow:#5B8CFF; --violet:#8B5CF6; --gold:#E8C27A; --red:#E10600;
+  --f-display:'Oswald','Arial Narrow',Arial,sans-serif;
+  --f-body:'Inter',Arial,sans-serif;
+  --f-accent:'Playfair Display',Georgia,serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;color:var(--ink);font-family:var(--f-body);
+  background:radial-gradient(120% 70% at 50% 38%,#1B2366 0%,var(--night2) 30%,var(--night) 75%) fixed,var(--night);overflow-x:hidden}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;min-height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;box-sizing:border-box;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:0 20px}
+.stripe{height:5px;background:var(--red);margin:0 calc(-1 * max(20px,env(safe-area-inset-left,0px)))}
+.top{display:flex;justify-content:space-between;padding-top:16px;font:500 11px/1 var(--f-mono);letter-spacing:.14em}
+.top .who{color:#FF4A3D} .top .role{color:var(--muted)}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding-block:18px;text-align:center}
+h1{font:700 46px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.02em;text-wrap:balance;
+  background:linear-gradient(180deg,#FFFFFF 10%,#BFD0FF 60%,var(--gold) 120%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 28px rgba(91,140,255,.35)}
+.lead{font:400 italic 21px/1.3 var(--f-accent);color:#C9D5FF;margin:0;max-width:28ch;text-wrap:balance}
+.eyebrow{font:500 11px/1 var(--f-mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin:0}
+
+/* шар */
+.orb{position:relative;width:min(290px,74vw);aspect-ratio:1;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:34px}
+.orb:focus-visible{outline:2px solid var(--gold);outline-offset:10px;border-radius:50%}
+.halo{position:absolute;inset:-22%;border-radius:50%;background:radial-gradient(circle,rgba(91,140,255,.55) 0%,rgba(139,92,246,.28) 38%,rgba(91,140,255,0) 68%);
+  animation:breathe 4s ease-in-out infinite}
+.sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  background:radial-gradient(circle at 50% 55%,#1A2C8C 0%,#0E1650 45%,#050722 80%);
+  box-shadow:0 0 40px rgba(91,140,255,.55),0 0 90px rgba(139,92,246,.35),inset 0 -20px 50px rgba(0,0,0,.6),inset 0 0 0 1.5px rgba(190,210,255,.25)}
+.nebula{position:absolute;inset:-25%;border-radius:50%;opacity:.85;mix-blend-mode:screen;
+  background:conic-gradient(from 0deg,rgba(91,140,255,0) 0deg,rgba(91,140,255,.55) 60deg,rgba(139,92,246,0) 120deg,rgba(232,194,122,.35) 190deg,rgba(91,140,255,0) 250deg,rgba(139,92,246,.5) 310deg,rgba(91,140,255,0) 360deg);
+  filter:blur(18px);animation:spin 14s linear infinite}
+.nebula.n2{animation-duration:22s;animation-direction:reverse;opacity:.55}
+.specks{position:absolute;inset:0;border-radius:50%;
+  background-image:radial-gradient(1.5px 1.5px at 30% 35%,#fff,transparent),radial-gradient(1px 1px at 65% 28%,#fff,transparent),radial-gradient(1.2px 1.2px at 72% 66%,#DCE6FF,transparent),radial-gradient(1px 1px at 38% 74%,#fff,transparent),radial-gradient(1.4px 1.4px at 54% 46%,var(--gold),transparent),radial-gradient(1px 1px at 22% 58%,#fff,transparent);
+  animation:spin 40s linear infinite;opacity:.9}
+.gloss{position:absolute;left:14%;top:8%;width:42%;height:26%;border-radius:50%;transform:rotate(-28deg);
+  background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.7),rgba(255,255,255,.08) 60%,transparent 72%)}
+.rim{position:absolute;inset:0;border-radius:50%;box-shadow:inset 8px -10px 24px rgba(91,140,255,.35)}
+.window{position:absolute;left:50%;top:52%;width:54%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,#0B1240 0%,#03051A 72%);box-shadow:inset 0 6px 18px rgba(0,0,0,.85),0 0 22px rgba(91,140,255,.25);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.mist{position:absolute;inset:0;width:100%;height:100%;border-radius:50%}
+.msg{position:relative;width:74%;display:block;text-align:center;
+  color:#fff;font:600 15px/1.12 var(--f-display);text-transform:uppercase;letter-spacing:.03em;text-wrap:balance;
+  text-shadow:0 0 6px rgba(255,255,255,.8),0 0 16px var(--glow),0 0 30px var(--violet)}
+.msg .w{display:inline-block;white-space:nowrap}
+.msg .w span{display:inline-block;opacity:0;filter:blur(8px);transform:translateY(6px) scale(.9);animation:emerge .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes emerge{to{opacity:1;filter:blur(0);transform:none}}
+.full{font:400 italic 22px/1.35 var(--f-accent);color:#E6ECFF;margin:0;max-width:24ch;text-wrap:balance;min-height:3em}
+.full span{opacity:0;filter:blur(6px);animation:emerge .8s ease forwards}
+.q{position:absolute;font:700 60px/1 var(--f-display);color:#DCE6FF;text-shadow:0 0 18px var(--glow),0 0 40px var(--violet);animation:flicker 3s ease-in-out infinite}
+.zzz{position:absolute;display:flex;gap:4px;font:600 22px/1 var(--f-display);color:#9FB6FF}
+.zzz b{animation:float 2.4s ease-in-out infinite;display:inline-block} .zzz b:nth-child(2){animation-delay:.4s;font-size:18px} .zzz b:nth-child(3){animation-delay:.8s;font-size:14px}
+.stand{position:absolute;left:50%;bottom:-40px;transform:translateX(-50%);width:58%;height:54px;pointer-events:none}
+.orbit{position:absolute;inset:-9%;border-radius:50%;animation:spin 9s linear infinite;pointer-events:none}
+.orbit i{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff,0 0 18px var(--glow)}
+.orbit i:nth-child(1){top:2%;left:48%} .orbit i:nth-child(2){bottom:12%;right:6%;width:4px;height:4px;background:var(--gold);box-shadow:0 0 10px var(--gold)} .orbit i:nth-child(3){top:40%;left:-1%;width:3px;height:3px}
+.orbit.o2{inset:-16%;animation-duration:15s;animation-direction:reverse}
+.orb.shake{animation:shake 1s cubic-bezier(.36,.07,.19,.97) both}
+.orb.shake .halo{animation:flare 1s ease-out}
+.orb.shake .nebula{animation-duration:1.2s}
+.orb.sleep .sphere,.orb.sleep .halo{filter:saturate(.4) brightness(.6)}
+.orb.sleep .nebula,.orb.sleep .specks,.orb.sleep .orbit{animation-play-state:paused}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes flare{0%{opacity:1;transform:scale(1)}40%{opacity:1;transform:scale(1.35)}100%{opacity:.8;transform:scale(1)}}
+@keyframes flicker{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-8px);opacity:1}}
+@keyframes shake{10%,90%{transform:translate(-3px,0) rotate(-2deg)}20%,80%{transform:translate(6px,-2px) rotate(3deg)}30%,50%,70%{transform:translate(-11px,2px) rotate(-6deg)}40%,60%{transform:translate(11px,-3px) rotate(6deg)}}
+
+/* подсказки-шаги */
+.step{display:flex;align-items:center;gap:12px;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(190,210,255,.18);border-radius:16px;padding:12px 16px;width:100%;box-sizing:border-box}
+.step .num{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 15px/1 var(--f-display);color:var(--night);background:var(--gold)}
+.step p{margin:0;font:500 15px/1.35 var(--f-body);color:var(--ink)}
+.step p span{color:var(--muted);font-weight:400}
+.arrow{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--gold);animation:bob 1.2s ease-in-out infinite}
+.arrow svg{width:26px;height:34px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+.phone{width:44px;height:64px;animation:wiggle 1.4s ease-in-out infinite;color:var(--gold)}
+@keyframes wiggle{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}}
+
+.dots{display:flex;gap:10px}
+.dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--gold);display:block}
+.dots i.f{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.phrase{font:500 21px/1.35 var(--f-body);margin:0;max-width:24ch;text-wrap:balance}
+.kicker{font:600 13px/1 var(--f-display);letter-spacing:.16em;text-transform:uppercase;color:var(--night);background:var(--gold);padding:7px 14px;border-radius:999px}
+.kicker.red{background:var(--red);color:#fff}
+
+.btn{appearance:none;border:0;cursor:pointer;width:100%;min-height:58px;border-radius:16px;font:600 19px/1 var(--f-display);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;box-sizing:border-box}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.btn.magic{color:#fff;background:linear-gradient(135deg,#3B6BFF 0%,var(--cobalt) 45%,#6D4AE6 100%);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 10px 30px rgba(91,140,255,.45);position:relative;overflow:hidden}
+.btn.magic::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:sheen 2.6s ease-in-out infinite}
+@keyframes sheen{0%{left:-60%}60%,100%{left:130%}}
+.btn.red{background:var(--red);color:#fff;box-shadow:0 10px 30px rgba(225,6,0,.4)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid rgba(220,230,255,.45)}
+.row{display:flex;gap:10px;width:100%} .row .btn{flex:1}
+.actions{display:flex;flex-direction:column;gap:10px;width:100%;align-items:center}
+.small{font:400 13px/1.4 var(--f-body);color:var(--muted);margin:0}
+.sign{font:500 11px/1 var(--f-mono);letter-spacing:.16em;color:var(--muted);text-align:center;text-transform:uppercase}
+
+.demo{margin-top:16px;border-top:1px dashed rgba(190,210,255,.2);padding-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.demo span{font:500 10px/1 var(--f-mono);letter-spacing:.12em;color:var(--muted);width:100%;text-align:center;margin-bottom:4px}
+.demo button{appearance:none;border:1px solid rgba(190,210,255,.2);background:rgba(255,255,255,.05);color:var(--ink);font:500 12px/1 var(--f-mono);padding:8px 10px;border-radius:8px;cursor:pointer}
+.demo button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#fff;color:var(--night);font:500 14px/1 var(--f-body);padding:12px 18px;border-radius:999px;z-index:5}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+</head><body><canvas id="sky" aria-hidden="true"></canvas>
+<div class="app">
+  <div class="stripe"></div>
+  <div class="top"><span class="who">ЕЛЕНА СОРОКИНА</span><span class="role">ПРОДЮСЕР · ИИ-СТРАТЕГ</span></div>
+  <main class="stage" id="stage" aria-live="polite"></main>
+  <div class="sign">АПР · 23 октября</div>
+  <nav class="demo" aria-label="Демо: экраны">
+    <span>ДЕМО ДЛЯ ЛЕНЫ · ЭКРАНЫ</span>
+    <button id="d0" data-s="start">1 Старт</button>
+    <button id="d1" data-s="ball">2 Тряси</button>
+    <button id="d2" data-s="p1">3 Шутка</button>
+    <button id="d3" data-s="p2">4 Мудрость</button>
+    <button id="d4" data-s="tired">5 Шар устал</button>
+  </nav>
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<script>
+const BOT_URL = "https://t.me/ИМЯ_БОТА?start=apr2310";
+const JOKES = [
+  "Сними себя без фильтра. Тебя и так все видели в 9 утра без кофе.",
+  "Сними, как всё пошло не по плану. Идеальным не верят, а над факапом смеются и покупают.",
+  "Сними свою папку «выложу потом». Шар заглянул: там контента на год.",
+  "Сними, как в 23:00 пишешь клиенту «конечно, без проблем». Это и есть твой фирменный стиль.",
+  "Сними, что творится за кулисами. Спойлер: твой хаос продаёт лучше любой студии.",
+  "Сними, как объясняешь маме, чем ты занимаешься. Мама поняла, значит, клиент купит.",
+  "Хватит снимать двадцатый дубль. Шар видел первый, он был лучший.",
+  "Сними сотрудника, который знает о вас всё. Он смешнее тебя, смирись.",
+  "Сними ответ хейтеру. Шар за вежливость, но с огоньком.",
+  "Сними свою «скучную» работу. От чего ты зеваешь, у зрителя вырывается «ого».",
+  "Сними, во сколько тебе обошлась ошибка. Наберёт больше, чем твой прайс.",
+  "Хватит ждать вдохновения. Шар ждал, оно не пришло. Снимай сегодня."
+];
+const WISDOM = [
+  "Сними себя и не прячься за логотипом. Люди покупают у людей.",
+  "Сними кухню, а не витрину. Витрин полно у всех, а кухня есть только у тебя.",
+  "Сними свою команду. Блогер отработает за деньги, а свои за любовь к делу.",
+  "Сними вопрос, который тебе задают каждый день. Тебя от него тошнит, а клиенту он нужен.",
+  "Сними, почему у тебя дороже. Не оправдывайся, объясни. Цену продаёт контент.",
+  "Сними путь продукта от идеи до клиента. Видно, как делается, и хочется купить.",
+  "Сними результат клиента. Твоё «мы лучшие» никто не слышит, а чужое «вау» слышат все.",
+  "Сними то, что для тебя «обычно». Для зрителя это закулисье, и от него не оторваться.",
+  "Сними серию, а не шедевр. Один ролик это лотерея, десять роликов это система.",
+  "Сними ролик с задачей: продать, нанять, объяснить. Всё остальное хобби.",
+  "Сними, от чего ты отказываешься ради качества. Твои «нет» продают лучше твоих «да».",
+  "Сними сегодня. Неидеальный ролик в ленте сильнее идеального в черновиках."
+];
+const short = t => { const s=t.split(/(?<=[.!?])\s/)[0]; return s.length<=64 ? s.replace(/[.]$/,"") : t.split(/[,:]/)[0]; };
+const letters = (t,step=.035,d0=0) => { let i=0; return t.split(" ").map(w=>`<span class="w">${[...w].map(c=>`<span style="animation-delay:${(d0+(i++)*step).toFixed(2)}s">${c}</span>`).join("")}</span>`).join(" "); };
+const words = (t,d0=0) => t.split(" ").map((w,i)=>`<span style="animation-delay:${(d0+i*.09).toFixed(2)}s">${w}</span>`).join(" ");
+let mist=.35, mistTarget=.35;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const $ = id => document.getElementById(id);
+let state = {screen:"start", n:0, text:""};
+let busy = false;
+
+const STAND = `<svg class="stand" viewBox="0 0 160 54" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#7A5A2A"/><stop offset=".5" stop-color="#F3D9A0"/><stop offset="1" stop-color="#7A5A2A"/></linearGradient></defs>
+<path d="M28 4 Q80 22 132 4 L120 30 Q80 40 40 30 Z" fill="url(#g)"/><ellipse cx="80" cy="42" rx="70" ry="10" fill="url(#g)"/><ellipse cx="80" cy="40" rx="62" ry="6" fill="#2A1E0C" opacity=".35"/>
+<circle cx="80" cy="22" r="3" fill="#FFF3D1"/><circle cx="56" cy="20" r="2" fill="#FFF3D1"/><circle cx="104" cy="20" r="2" fill="#FFF3D1"/></svg>`;
+function orb(inner, cls=""){return `<button class="orb ${cls}" id="orb" aria-label="Шар">
+  <div class="halo"></div><div class="orbit"><i></i><i></i><i></i></div><div class="orbit o2"><i></i><i></i></div>
+  <div class="sphere"><div class="nebula"></div><div class="nebula n2"></div><div class="specks"></div>
+  <div class="window">${inner}</div><div class="rim"></div><div class="gloss"></div></div>${STAND}</button>`}
+function dots(n){return `<div class="dots" aria-label="Бросок ${Math.min(n,3)} из 3">${[1,2,3].map(i=>`<i class="${i<=n?'f':''}"></i>`).join("")}</div>`}
+const ARROW = `<div class="arrow" aria-hidden="true"><svg viewBox="0 0 26 34"><path d="M13 2v26M3 19l10 11 10-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+const PHONE = `<svg class="phone" viewBox="0 0 44 64" aria-hidden="true"><rect x="8" y="6" width="28" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="22" cy="50" r="2.5" fill="currentColor"/><path d="M2 22c-2 6-2 14 0 20M42 22c2 6 2 14 0 20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`;
+
+function render(){
+  const s = state.screen, st = $("stage");
+  document.querySelectorAll(".demo button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.s===s)));
+  if(s==="start"){
+    st.innerHTML = `<p class="eyebrow">✦ Магия контента · 3 броска ✦</p>
+      <h1>Контент-шар</h1>
+      ${orb('<canvas class="mist"></canvas><span class="q">?</span>')}
+      <p class="lead">Шар знает, что тебе снимать</p>
+      <div class="step"><span class="num">1</span><p>Нажми кнопку, чтобы разбудить шар</p></div>
+      ${ARROW}
+      <div class="actions"><button class="btn magic" id="go">✦ Спросить шар</button></div>`;
+    const go = () => { askMotion(); burst(); state.screen="ball"; render(); };
+    $("go").onclick = go; $("orb").onclick = go;
+  }
+  if(s==="ball"){
+    st.innerHTML = `${dots(state.n)}
+      ${orb('<canvas class="mist"></canvas><span class="q">?</span>')}
+      <div class="step"><span class="num">2</span><p>Мысленно спроси: «Что мне снимать?»<br>и потряси телефон <span>или нажми на шар</span></p>${PHONE}</div>`;
+    $("orb").onclick = roll;
+  }
+  if(s==="p1"||s==="p2"){
+    const joke = s==="p1";
+    st.innerHTML = `<span class="kicker">${joke?"✦ Шар шутит":"✦ Шар серьёзен"}</span>
+      ${orb(`<canvas class="mist"></canvas><div class="msg" id="msg">${state.fresh?letters(short(state.text),.035,.5):short(state.text).split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</div>`)}
+      <p class="full">${state.fresh?words(state.text,1.4):state.text}</p>
+      <div class="row"><button class="btn magic" id="again">Ещё раз</button><button class="btn ghost" id="share">Поделиться</button></div>
+      <p class="small">${joke?"Потряси ещё раз: теперь шар ответит серьёзно":"Осталась последняя попытка"}</p>
+      ${dots(state.n)}`;
+    $("orb").onclick = roll; $("again").onclick = roll; $("share").onclick = share;
+  }
+  if(s==="tired"){
+    st.innerHTML = `<span class="kicker red">Бросок 3</span>
+      ${orb('<span class="zzz"><b>Z</b><b>z</b><b>z</b></span>','sleep')}
+      <h1 style="font-size:34px">Всё. Шар устал.<br>Хватит развлекаться</h1>
+      <p class="phrase" style="font-size:18px">Хочешь не предсказание, а реальный список форматов, которые работают в разных нишах?</p>
+      <div class="actions"><a class="btn red" href="${BOT_URL}" target="_blank" rel="noopener">Забрать список форматов</a>
+      <p class="small">Бот пришлёт список и ссылку на мой канал</p></div>`;
+    $("orb").onclick = () => { const b=$("orb"); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); };
+  }
+}
+
+function roll(){
+  if(busy) return; busy = true;
+  if(state.n >= 2){ shakeAnim(()=>{state.n=3; state.screen="tired"; busy=false; render();}); return; }
+  const next = state.n + 1;
+  shakeAnim(()=>{
+    state.n = next; state.text = next===1 ? pick(JOKES) : pick(WISDOM); state.fresh=true;
+    state.screen = next===1 ? "p1" : "p2"; busy = false; render(); burst(); puff(18);
+    fitMsg(); state.fresh=false; mistTarget=.12; setTimeout(()=>mistTarget=.3,2600);
+    try{ navigator.vibrate && navigator.vibrate([60,40,90]) }catch(e){}
+  });
+}
+function shakeAnim(done){
+  const b = $("orb"); const m=$("msg"); if(m){ m.style.transition="opacity .4s, filter .4s"; m.style.opacity=0; m.style.filter="blur(8px)"; }
+  mistTarget=1; puff(26);
+  b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+  setTimeout(done, matchMedia("(prefers-reduced-motion: reduce)").matches ? 150 : 1000);
+}
+function share(){
+  const t = `Мне шар сказал: «${state.text}» А тебе?`;
+  try{ navigator.clipboard.writeText(t).then(()=>toast("Скопировано"), ()=>toast("Не получилось скопировать")); }catch(e){ toast("Не получилось скопировать"); }
+}
+function toast(m){ const t=$("toast"); t.textContent=m; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,1600); }
+
+/* тряска: на настоящем сайте работает, в превью может быть закрыта, тогда работает нажатие */
+let lastShake=0, listening=false;
+function askMotion(){
+  try{
+    if(typeof DeviceMotionEvent!=="undefined" && typeof DeviceMotionEvent.requestPermission==="function"){
+      DeviceMotionEvent.requestPermission().then(r=>{ if(r==="granted") listen(); }).catch(()=>{});
+    } else listen();
+  }catch(e){}
+}
+function listen(){
+  if(listening) return; listening=true;
+  window.addEventListener("devicemotion", e=>{
+    const a = e.accelerationIncludingGravity || e.acceleration; if(!a) return;
+    const f = Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2), now = Date.now();
+    if(f > 22 && now-lastShake > 1500 && state.screen!=="start"){ lastShake=now; roll(); }
+  });
+}
+
+function fitMsg(){ const m=$("msg"); if(!m) return; const w=m.parentElement.clientWidth; let fs=Math.round(w*.13);
+  m.style.fontSize=fs+"px"; while(fs>9 && (m.scrollHeight>w*.68 || m.scrollWidth>w*.76)){ fs--; m.style.fontSize=fs+"px"; } }
+/* звёздное небо, искры, дым и туман в шаре */
+let smoke=[];
+function puff(n){ const o=$("orb"); if(!o) return; const r=o.getBoundingClientRect();
+  for(let i=0;i<n;i++) smoke.push({x:r.left+r.width*(.3+Math.random()*.4),y:r.top+r.height*(.15+Math.random()*.3),vx:(Math.random()-.5)*.6,vy:-(Math.random()*.9+.4),r:r.width*(.08+Math.random()*.08),l:1,h:Math.random()<.5?"139,92,246":"120,160,255"}); }
+const blobs=Array.from({length:14},(_,i)=>({a:i/14*6.28,d:.15+Math.random()*.3,s:(Math.random()*.6+.4)*(i%2?1:-1),r:.28+Math.random()*.25,c:i%3===0?"139,92,246":i%3===1?"91,140,255":"232,194,122"}));
+let t0=0;
+function drawMist(){ const c=document.querySelector(".mist"); if(!c) return; const d=Math.min(devicePixelRatio||1,2), w=c.clientWidth;
+  if(c.width!==Math.round(w*d)){ c.width=c.height=Math.round(w*d); } const g=c.getContext("2d"); g.setTransform(d,0,0,d,0,0); g.clearRect(0,0,w,w);
+  g.globalCompositeOperation="lighter"; const sp=1+mist*5;
+  for(const b of blobs){ b.a+=.004*b.s*sp; const x=w/2+Math.cos(b.a)*w*b.d, y=w/2+Math.sin(b.a*1.3)*w*b.d, R=w*b.r*(.8+mist*.5);
+    const gr=g.createRadialGradient(x,y,0,x,y,R); gr.addColorStop(0,`rgba(${b.c},${.10+mist*.32})`); gr.addColorStop(1,`rgba(${b.c},0)`); g.fillStyle=gr; g.beginPath(); g.arc(x,y,R,0,6.28); g.fill(); }
+  g.globalCompositeOperation="source-over"; }
+const cv=$("sky"), cx=cv.getContext("2d"); let W,H,stars=[],sparks=[];
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function size(){ const d=Math.min(devicePixelRatio||1,2); W=innerWidth;H=innerHeight; cv.width=W*d; cv.height=H*d; cx.setTransform(d,0,0,d,0,0);
+  stars=Array.from({length:Math.round(W*H/2600)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,p:Math.random()*6.28,s:Math.random()*.02+.005,g:Math.random()<.12})); }
+function burst(){ const o=$("orb"); if(!o) return; const r=o.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2;
+  for(let i=0;i<46;i++){ const a=Math.random()*6.28, v=Math.random()*4+1.5; sparks.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,l:1,g:Math.random()<.4}); } }
+function frame(){
+  cx.clearRect(0,0,W,H);
+  for(const s of stars){ s.p+=s.s; const a=.35+.65*Math.abs(Math.sin(s.p)); cx.globalAlpha=a; cx.fillStyle=s.g?"#E8C27A":"#DCE6FF"; cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.28); cx.fill(); }
+  for(const p of sparks){ p.x+=p.vx; p.y+=p.vy; p.vy+=.05; p.vx*=.98; p.l-=.016; cx.globalAlpha=Math.max(p.l,0); cx.fillStyle=p.g?"#F3D9A0":"#BFD0FF";
+    cx.beginPath(); cx.arc(p.x,p.y,2.2*p.l+.5,0,6.28); cx.fill(); }
+  sparks=sparks.filter(p=>p.l>0);
+  for(const s of smoke){ s.x+=s.vx; s.y+=s.vy; s.r*=1.012; s.l-=.007; const a=Math.max(s.l,0)*.22;
+    const gr=cx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r); gr.addColorStop(0,`rgba(${s.h},${a})`); gr.addColorStop(1,`rgba(${s.h},0)`); cx.globalAlpha=1; cx.fillStyle=gr; cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.28); cx.fill(); }
+  smoke=smoke.filter(s=>s.l>0); cx.globalAlpha=1;
+  mist+=(mistTarget-mist)*.04; drawMist();
+  if(!still) requestAnimationFrame(frame);
+}
+addEventListener("resize",size); size(); frame();
+
+document.querySelectorAll(".demo button").forEach(b=>b.onclick=()=>{
+  const s=b.dataset.s; busy=false;
+  if(s==="start"||s==="ball") state={screen:s,n:0,text:""};
+  if(s==="p1") state={screen:s,n:1,text:pick(JOKES)};
+  if(s==="p2") state={screen:s,n:2,text:pick(WISDOM)};
+  if(s==="tired") state={screen:s,n:3,text:""};
+  render(); fitMsg();
+});
+render();
+</script>
+</body></html>

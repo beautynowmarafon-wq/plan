@@ -18,9 +18,22 @@ jobs:
     timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
+      - name: Restore bot state
+        uses: actions/cache/restore@v4
+        with:
+          path: bot_state.json
+          key: bot-state-${{ github.run_id }}
+          restore-keys: bot-state-
       - name: Run bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           ADMIN_CHAT_ID: ${{ secrets.ADMIN_CHAT_ID }}
-          RUN_SECONDS: "20700"
+          RUN_SECONDS: "20400"
+          STATE_PATH: bot_state.json
         run: python3 bot/bot.py
+      - name: Save bot state
+        if: always() && hashFiles('bot_state.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: bot_state.json
+          key: bot-state-${{ github.run_id }}

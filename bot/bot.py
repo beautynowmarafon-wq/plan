@@ -1,6 +1,9 @@
 """Telegram-бот @sorockina_ai_bot: воронка после игры «Контент-шар».
 
+Цепочка: гайд по форматам -> канал -> кейс Bravos -> консультация по контенту -> обучение ИИ.
 Запускается в GitHub Actions (long polling). Ключ бота берётся из секрета BOT_TOKEN.
+Состояние (кому и когда отправить следующее сообщение) хранится в bot_state.json,
+который workflow переносит между запусками через закрытый кэш Actions.
 Персональные данные в лог не пишутся: репозиторий публичный.
 """
 import html
@@ -18,14 +21,15 @@ ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "Elen_Sorockina").lower()
 RUN_SECONDS = int(os.environ.get("RUN_SECONDS", "20700"))
 HERE = os.path.dirname(os.path.abspath(__file__))
 PDF_PATH = os.path.join(HERE, "Форматы_Reels_по_нишам.pdf")
+STATE_PATH = os.environ.get("STATE_PATH", os.path.join(HERE, "..", "bot_state.json"))
 
 CHANNEL_URL = "https://t.me/ne_ruchkami"
-YOUTUBE_URL = "https://www.youtube.com/watch?v=t-HqUdZIPl4"
 LENA_URL = "https://t.me/Elen_Sorockina"
 
-# Через сколько секунд после старта приходят следующие сообщения
-DELAY_YOUTUBE = 20 * 60
-DELAY_CONSULT = 60 * 60
+MIN = 60
+HOUR = 60 * MIN
+
+# ---------- Тексты ----------
 
 TEXT_GIFT = (
     "Шар передал, что ты за форматами 🔮\n\n"
@@ -33,45 +37,106 @@ TEXT_GIFT = (
     "Здоровье, красота, эксперты, производство: у каждого формата реальный ролик и цифры.\n\n"
     "Найди свой и сними его уже на этой неделе."
 )
+
 TEXT_CHANNEL = (
     "А теперь честно: шар пошутил, а система работает 😉\n\n"
-    "В канале <b>«Не ручками»</b> показываю, как собрать контент-систему с ИИ: "
-    "без копирайтера, монтажёра и выгорания. Разборы, рабочие связки с Claude и готовые промпты."
+    "В канале <b>«Не ручками»</b> разбираю контент, который продаёт: "
+    "живые кейсы, форматы и воронки. Без охватов ради охватов."
 )
-TEXT_YOUTUBE = (
-    "Если хочешь глубже про ИИ в контенте, вот моё видео:\n\n"
-    "<b>«Освой 80% возможностей Claude за 15 минут»</b>. "
-    "10 приёмов, которые почти никто не использует."
+
+TEXT_CASE = (
+    "Помнишь кейс с копи лювак на выступлении? Расскажу, как он устроен.\n\n"
+    "<b>Задача:</b> протестировать спецпродукт, самый элитный кофе в мире.\n"
+    "<b>Контент:</b> серия роликов. «Правда или миф» прогревает, дальше предзаказ, "
+    "дальше ролик «За этот кофе мы заплатили 90 000 ₽» с призывом написать «ЛЮВАК».\n"
+    "<b>Путь:</b> человек пишет слово, бот отвечает в директ, присылает набор и ссылку. "
+    "Сайт был просто кассой.\n"
+    "<b>Результат:</b> партия ушла за 2 дня. Ни одного ролика ради охвата, юмора или хайпа.\n\n"
+    "Контент не должен быть красивым. Он должен работать."
 )
+
 TEXT_CONSULT = (
-    "Хочешь понять, какой формат сработает именно в твоём бизнесе?\n\n"
-    "Я перевожу задачи бизнеса на язык контента. На консультации разберём твой контент "
-    "и решим, что снимать, чтобы приходили <b>заявки, а не только лайки</b>."
+    "Хочешь, чтобы контент так же закрывал задачу твоего бизнеса?\n\n"
+    "На консультации разберём твой контент и решим, какие форматы приведут "
+    "<b>заявки, а не только лайки</b>: что снимать, о чём и куда вести человека дальше."
 )
+
 TEXT_CONSULT_OK = (
     "Отлично! Напиши мне в личку слово <b>КОНСУЛЬТАЦИЯ</b>, "
     "и договоримся о времени 🙌"
 )
+
+TEXT_AI = (
+    "Что снимать, теперь понятно. Остаётся вопрос: когда на это всё найти время?\n\n"
+    "Сценарии, тексты, монтаж и идеи под форматы можно отдать ИИ. "
+    "Я учу этому лично: под твой бизнес и твои задачи, без сложных терминов. "
+    "Сразу собираем рабочие связки, которыми ты пользуешься на следующий день."
+)
+
+TEXT_AI_OK = (
+    "Супер! Напиши мне в личку слово <b>ОБУЧЕНИЕ</b>, "
+    "расскажу формат и подберём время 🙌"
+)
+
 TEXT_MENU = "Выбирай, что нужно 👇"
 
 KB_CHANNEL = {"inline_keyboard": [[{"text": "Подписаться на канал «Не ручками»", "url": CHANNEL_URL}]]}
-KB_YOUTUBE = {"inline_keyboard": [[{"text": "▶ Смотреть видео", "url": YOUTUBE_URL}]]}
+KB_CASE = {"inline_keyboard": [[{"text": "Хочу так же в своём бизнесе", "callback_data": "consult"}]]}
 KB_CONSULT = {"inline_keyboard": [[{"text": "Хочу консультацию", "callback_data": "consult"}]]}
+KB_AI = {"inline_keyboard": [[{"text": "Хочу обучение ИИ", "callback_data": "ai"}]]}
 KB_LENA = {"inline_keyboard": [[{"text": "Написать Лене", "url": LENA_URL}]]}
 KB_MENU = {"inline_keyboard": [
     [{"text": "📄 Гайд по форматам", "callback_data": "gift"}],
     [{"text": "Канал «Не ручками»", "url": CHANNEL_URL}],
-    [{"text": "▶ Видео про Claude", "url": YOUTUBE_URL}],
-    [{"text": "Хочу консультацию", "callback_data": "consult"}],
+    [{"text": "Консультация по контенту", "callback_data": "consult"}],
+    [{"text": "Обучение ИИ", "callback_data": "ai"}],
 ]}
 
-API = f"https://api.telegram.org/bot{TOKEN}/"
-pdf_file_id = None
-admin_chat = ADMIN_CHAT_ID or None
-scheduled = []  # (when, chat_id, kind)
-started = set()
-stats = {"start": 0, "consult": 0}
+# Цепочка после старта: (через сколько секунд, ключ сообщения)
+CHAIN = [
+    (30 * MIN, "case"),
+    (2 * HOUR, "consult"),
+    (24 * HOUR, "ai"),
+]
+MESSAGES = {
+    "case": (TEXT_CASE, KB_CASE),
+    "consult": (TEXT_CONSULT, KB_CONSULT),
+    "ai": (TEXT_AI, KB_AI),
+}
 
+# ---------- Состояние ----------
+
+API = f"https://api.telegram.org/bot{TOKEN}/"
+state = {"pdf_file_id": None, "admin_chat": ADMIN_CHAT_ID or None,
+         "scheduled": [], "started": [], "stats": {"start": 0, "consult": 0, "ai": 0}}
+
+
+def load_state():
+    global state
+    try:
+        with open(STATE_PATH, encoding="utf8") as f:
+            saved = json.load(f)
+        state.update({k: v for k, v in saved.items() if k in state})
+        if ADMIN_CHAT_ID:
+            state["admin_chat"] = ADMIN_CHAT_ID
+        print(f"state loaded: {len(state['scheduled'])} scheduled", flush=True)
+    except FileNotFoundError:
+        print("no state yet", flush=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"state load error: {type(e).__name__}", flush=True)
+
+
+def save_state():
+    try:
+        tmp = STATE_PATH + ".tmp"
+        with open(tmp, "w", encoding="utf8") as f:
+            json.dump(state, f, ensure_ascii=False)
+        os.replace(tmp, STATE_PATH)
+    except Exception as e:  # noqa: BLE001
+        print(f"state save error: {type(e).__name__}", flush=True)
+
+
+# ---------- Telegram ----------
 
 def call(method, params=None, timeout=70):
     data = urllib.parse.urlencode(
@@ -94,9 +159,10 @@ def send(chat_id, text, kb=None):
 
 
 def send_pdf(chat_id):
-    global pdf_file_id
-    if pdf_file_id:
-        return call("sendDocument", {"chat_id": chat_id, "document": pdf_file_id})
+    if state["pdf_file_id"]:
+        res = call("sendDocument", {"chat_id": chat_id, "document": state["pdf_file_id"]})
+        if res.get("ok"):
+            return res
     boundary = uuid.uuid4().hex
     with open(PDF_PATH, "rb") as f:
         blob = f.read()
@@ -112,7 +178,7 @@ def send_pdf(chat_id):
         with urllib.request.urlopen(req, timeout=120) as r:
             res = json.loads(r.read().decode())
         if res.get("ok"):
-            pdf_file_id = res["result"]["document"]["file_id"]
+            state["pdf_file_id"] = res["result"]["document"]["file_id"]
         return res
     except Exception as e:  # noqa: BLE001
         print(f"sendDocument error: {type(e).__name__}", flush=True)
@@ -125,40 +191,52 @@ def who(u):
 
 
 def notify(text):
-    if admin_chat:
-        send(admin_chat, text)
+    if state["admin_chat"]:
+        send(state["admin_chat"], text)
 
+
+# ---------- Логика ----------
 
 def on_start(chat_id, user, payload):
-    stats["start"] += 1
+    state["stats"]["start"] += 1
     send(chat_id, TEXT_GIFT)
     send_pdf(chat_id)
     time.sleep(2)
     send(chat_id, TEXT_CHANNEL, KB_CHANNEL)
-    if chat_id not in started:
-        started.add(chat_id)
+    if chat_id not in state["started"]:
+        state["started"].append(chat_id)
         now = time.time()
-        scheduled.append((now + DELAY_YOUTUBE, chat_id, "youtube"))
-        scheduled.append((now + DELAY_CONSULT, chat_id, "consult"))
-        src = f", источник: {payload}" if payload else ""
+        for delay, key in CHAIN:
+            state["scheduled"].append([now + delay, chat_id, key])
+        src = f", источник: {html.escape(payload)}" if payload else ""
         notify(f"👋 Новый человек в боте: {who(user)}{src}")
+    save_state()
 
 
-def on_consult(chat_id, user):
-    stats["consult"] += 1
-    send(chat_id, TEXT_CONSULT_OK, KB_LENA)
-    notify(f"🔥 Заявка на консультацию: {who(user)}\n<a href=\"tg://user?id={user.get('id')}\">Открыть профиль</a>")
+def on_request(chat_id, user, kind):
+    state["stats"][kind] += 1
+    if kind == "consult":
+        send(chat_id, TEXT_CONSULT_OK, KB_LENA)
+        label = "консультацию по контенту"
+    else:
+        send(chat_id, TEXT_AI_OK, KB_LENA)
+        label = "обучение ИИ"
+    # если человек уже оставил заявку, напоминание про консультацию больше не шлём
+    if kind == "consult":
+        state["scheduled"] = [s for s in state["scheduled"] if not (s[1] == chat_id and s[2] == "consult")]
+    notify(f"🔥 Заявка на {label}: {who(user)}\n<a href=\"tg://user?id={user.get('id')}\">Открыть профиль</a>")
+    save_state()
 
 
 def handle(update):
-    global admin_chat
     if "callback_query" in update:
         q = update["callback_query"]
         call("answerCallbackQuery", {"callback_query_id": q["id"]})
         chat_id = q["message"]["chat"]["id"]
-        if q.get("data") == "consult":
-            on_consult(chat_id, q["from"])
-        elif q.get("data") == "gift":
+        data = q.get("data")
+        if data in ("consult", "ai"):
+            on_request(chat_id, q["from"], data)
+        elif data == "gift":
             send_pdf(chat_id)
         return
     msg = update.get("message")
@@ -166,28 +244,31 @@ def handle(update):
         return
     chat_id, user, text = msg["chat"]["id"], msg.get("from", {}), msg["text"].strip()
     if (user.get("username") or "").lower() == ADMIN_USERNAME and not ADMIN_CHAT_ID:
-        admin_chat = chat_id
+        state["admin_chat"] = chat_id
+        save_state()
     if text.startswith("/start"):
         parts = text.split(maxsplit=1)
         on_start(chat_id, user, parts[1] if len(parts) > 1 else "")
     elif text.startswith("/myid"):
         send(chat_id, f"Твой chat id: <code>{chat_id}</code>")
-    elif text.startswith("/stats") and str(chat_id) == str(admin_chat):
-        send(chat_id, f"С начала этого запуска: стартов {stats['start']}, заявок {stats['consult']}")
+    elif text.startswith("/stats") and str(chat_id) == str(state["admin_chat"]):
+        s = state["stats"]
+        send(chat_id, f"Всего: стартов {s['start']}, заявок на консультацию {s['consult']}, на обучение ИИ {s['ai']}")
     else:
         send(chat_id, TEXT_MENU, KB_MENU)
 
 
 def run_scheduled():
     now = time.time()
-    due = [s for s in scheduled if s[0] <= now]
+    due = [s for s in state["scheduled"] if s[0] <= now]
+    if not due:
+        return
     for s in due:
-        scheduled.remove(s)
-        _, chat_id, kind = s
-        if kind == "youtube":
-            send(chat_id, TEXT_YOUTUBE, KB_YOUTUBE)
-        else:
-            send(chat_id, TEXT_CONSULT, KB_CONSULT)
+        state["scheduled"].remove(s)
+        _, chat_id, key = s
+        text, kb = MESSAGES[key]
+        send(chat_id, text, kb)
+    save_state()
 
 
 def setup():
@@ -200,10 +281,10 @@ def main():
     if not TOKEN:
         print("BOT_TOKEN не задан, выходим", flush=True)
         return
-    me = call("getMe")
-    if not me.get("ok"):
+    if not call("getMe").get("ok"):
         print("getMe не прошёл, проверьте ключ", flush=True)
         sys.exit(1)
+    load_state()
     call("deleteWebhook")
     setup()
     print("bot started", flush=True)
@@ -222,10 +303,11 @@ def main():
         if not res.get("ok"):
             time.sleep(3)
         run_scheduled()
-    # перед выходом подтверждаем полученные обновления
     if offset is not None:
         call("getUpdates", {"offset": offset, "timeout": 0})
-    print(f"bot stopped: starts={stats['start']} consult={stats['consult']}", flush=True)
+    save_state()
+    s = state["stats"]
+    print(f"bot stopped: starts={s['start']} consult={s['consult']} ai={s['ai']}", flush=True)
 
 
 if __name__ == "__main__":
